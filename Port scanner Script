@@ -1,0 +1,98 @@
+#!usr/bin/perl perl.pl
+use Term::ANSIColor qw(:constants);
+system("title Port Scanner   [  Created by Infinity Security  ]          %date%  %time%");
+STARTCLS:
+system("cls");
+print BRIGHT_GREEN, <<EOTEXT; 
+
+ [Port Scanner tool]
+
+EOTEXT
+print BRIGHT_RED, "1)";
+print BRIGHT_BLUE, " Clear Screen\n";
+print BRIGHT_RED, "2)";
+print BRIGHT_BLUE, " Port scanner\n";
+print BRIGHT_RED, "3)";
+print BRIGHT_BLUE, " Check your Ip\n";
+print "\n", RESET;
+
+START:
+
+print BRIGHT_YELLOW, "InfinitySec:> ", RESET;
+$apex=<STDIN>;
+if ($apex==2){
+&scanner;
+}
+if ($apex==3){
+&ip;
+}
+elsif ($apex==1){
+    &cls;
+}
+else {
+&wrong;
+}
+sub wrong{
+print RED, "[!] Incorrect command\n", RESET;
+goto START;
+sub cls{
+    goto STARTCLS;
+}
+}
+
+
+sub scanner{
+use IO::Socket;
+print BRIGHT_GREEN, "\t*******************************\n";
+print BRIGHT_GREEN, "\t*";
+print BRIGHT_RED, ON_BLUE, "         Port Scanner        ", RESET;
+print BRIGHT_GREEN, "*\n";
+print BRIGHT_GREEN, "\t*******************************\n";
+$| = 1;
+print "Enter Ip/Url: "; 
+chop ($target = <stdin>);
+print "Start Port : ";
+chop ($start_port = <stdin>);
+print "End Port : ";
+chop ($end_port = <stdin>);
+print "max speed 0.05\n";
+print "scan speed : ";
+chop ($time = <stdin>);
+print BRIGHT_RED "-----------------\n", BRIGHT_GREEN;
+foreach ($port = $start_port ; $port <= $end_port ; $port++) 
+{
+    print "\rScanning port $port";
+    $socket = IO::Socket::INET->new(PeerAddr => $target , PeerPort => $port , Proto => 'tcp' , Timeout => $time);
+    if( $socket )
+    {
+        print "\r = Port ";
+        print BRIGHT_RED, "$port", BRIGHT_GREEN;
+        print " is open.\n" ;
+    }
+    else
+    {
+        #Port is closed, nothing to print
+    }
+}
+print "\n\nFinished Scanning $target\n";
+print "\n";
+goto START;
+}
+
+
+
+
+
+
+
+
+
+sub ip{
+use Sys::Hostname;
+use Socket;
+print "\n";
+my($addr)=inet_ntoa((gethostbyname(hostname))[4]);
+print BRIGHT_RED, "$addr\n";
+print "\n";
+goto START;
+}
